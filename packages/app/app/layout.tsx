@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { ClientContextProvider } from '@/context/client-context'
 
 export const metadata: Metadata = {
   title: 'Sharesnap',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ClientContextProvider>{children}</ClientContextProvider>
+      </body>
     </html>
   )
 }
