@@ -3,7 +3,8 @@
   "scripts": {
     "dev:app": "cd packages/app && npm run dev",
     "dev:server": "cd packages/server && go run main.go",
-    "dev": "concurrently \"npm run dev:app\" \"npm run dev:server\""
+    "dev": "concurrently \"npm run dev:app\" \"npm run dev:server\"",
+    "format": "cd packages/app && npx prettier . --write"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"
