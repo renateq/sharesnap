@@ -1,0 +1,11 @@
+{
+  "name": "sharesnap",
+  "scripts": {
+    "dev:app": "cd packages/app && npm run dev",
+    "dev:server": "cd packages/server && go run main.go",
+    "dev": "concurrently \"npm run dev:app\" \"npm run dev:server\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
