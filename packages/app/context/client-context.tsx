@@ -25,14 +25,14 @@ type ClientContext = {
   status: Status
   socketId: string | null
   connect: (peerId: string) => void
-  sendFile: () => void
+  sendFiles: (files: File[]) => void
 }
 
 const ClientContext = createContext<ClientContext>({
   status: 'idle',
   socketId: null,
   connect: () => {},
-  sendFile: () => {},
+  sendFiles: () => {},
 })
 
 export const useClientContext = () => useContext(ClientContext)
@@ -167,12 +167,13 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function sendFile() {
-    dataChannelRef.current?.send('EOF')
+  function sendFiles(files: File[]) {
+    console.log(files)
+    //dataChannelRef.current?.send('EOF')
   }
 
   return (
-    <ClientContext.Provider value={{ status, socketId, connect, sendFile }}>
+    <ClientContext.Provider value={{ status, socketId, connect, sendFiles }}>
       {children}
     </ClientContext.Provider>
   )
