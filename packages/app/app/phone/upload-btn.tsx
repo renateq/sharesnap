@@ -4,7 +4,7 @@ import { useClientContext } from '@/context/client-context'
 import { useRef } from 'react'
 
 export function UploadBtn() {
-  const { sendFiles } = useClientContext()
+  const { sendFiles, status } = useClientContext()
 
   const imageInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -14,7 +14,8 @@ export function UploadBtn() {
         onClick={() => {
           imageInputRef.current?.click()
         }}
-        className="w-full rounded bg-black py-1.5 text-lg font-medium text-white"
+        disabled={status !== 'connected'}
+        className="w-full rounded bg-black py-1.5 text-lg font-medium text-white disabled:opacity-50"
       >
         Choose photos
       </button>

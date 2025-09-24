@@ -56,7 +56,7 @@ export function FilePreview({ file }: FilePreviewProps) {
           <Image
             src={previewUrl}
             alt={file.name}
-            fill
+            fill={true}
             className="object-contain"
             unoptimized
           />

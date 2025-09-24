@@ -1,9 +1,10 @@
 'use client'
 
 import { useClientContext } from '@/context/client-context'
+import { Gallery } from './gallery'
 
 export default function Home() {
-  const { socketId, status } = useClientContext()
+  const { socketId, status, sharedFiles } = useClientContext()
 
   return (
     <div>
@@ -14,6 +15,8 @@ export default function Home() {
           Open Phone
         </a>
       )}
+      <p>Shared files: {sharedFiles.length}</p>
+      <Gallery files={sharedFiles} />
     </div>
   )
 }
