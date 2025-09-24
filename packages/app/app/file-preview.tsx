@@ -6,6 +6,8 @@ type FilePreviewProps = {
   file: File
 }
 
+const MAX_RATIO = 16 / 9
+
 export function FilePreview({ file }: FilePreviewProps) {
   const [previewUrl, setPreviewUrl] = useState<string>()
   const [dimensions, setDimensions] = useState<{
@@ -32,6 +34,9 @@ export function FilePreview({ file }: FilePreviewProps) {
   }, [file])
 
   if (previewUrl && dimensions) {
+    const aspectRatio = dimensions.width / dimensions.height
+    const isTooWide = aspectRatio > MAX_RATIO
+
     return (
       <motion.div
         className="w-fit rounded-xl bg-white p-3"
@@ -51,13 +56,13 @@ export function FilePreview({ file }: FilePreviewProps) {
       >
         <div
           className="relative h-96 overflow-hidden rounded-lg bg-blue-200"
-          style={{ aspectRatio: dimensions.width / dimensions.height }}
+          style={{ aspectRatio: isTooWide ? MAX_RATIO : aspectRatio }}
         >
           <Image
             src={previewUrl}
             alt={file.name}
             fill={true}
-            className="object-contain"
+            className="object-cover"
             unoptimized
           />
         </div>
