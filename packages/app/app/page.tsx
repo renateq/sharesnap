@@ -1,22 +1,19 @@
 'use client'
 
 import { useClientContext } from '@/context/client-context'
-import { Gallery } from './gallery'
+import { Navbar } from './navbar'
+import { Hero } from './hero'
+import { DisplaySharedFiles } from '@/app/display-shared-files'
 
 export default function Home() {
-  const { socketId, status, sharedFiles } = useClientContext()
+  const { status } = useClientContext()
 
   return (
-    <div>
-      <p>Laptop</p>
-      <p>Status: {status}</p>
-      {socketId && (
-        <a href={`/phone?id=${socketId}`} target="_blank">
-          Open Phone
-        </a>
-      )}
-      <p>Shared files: {sharedFiles.length}</p>
-      <Gallery files={sharedFiles} />
-    </div>
+    <>
+      <Navbar />
+      <main className="min-h-[calc(100dvh-5rem)] px-[10%]">
+        {status === 'idle' ? <Hero /> : <DisplaySharedFiles />}
+      </main>
+    </>
   )
 }

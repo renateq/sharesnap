@@ -43,6 +43,8 @@ export function FilePreview({ file }: FilePreviewProps) {
         style={{
           rotate: Math.random() * 20 - 10,
         }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
         whileHover={{
           scale: 1.1,
           rotate: 0,
@@ -55,7 +57,7 @@ export function FilePreview({ file }: FilePreviewProps) {
         }}
       >
         <div
-          className="relative h-96 overflow-hidden rounded-lg bg-blue-200"
+          className="relative h-96 overflow-hidden rounded-lg"
           style={{ aspectRatio: isTooWide ? MAX_RATIO : aspectRatio }}
         >
           <Image
