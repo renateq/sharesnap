@@ -12,7 +12,12 @@ export default function Home() {
     <>
       <Navbar />
       <main className="min-h-[calc(100dvh-5rem)] px-[10%]">
-        {status === 'idle' ? <Hero /> : <DisplaySharedFiles />}
+        <div className={status !== 'idle' ? 'hidden' : ''}>
+          <Hero />
+        </div>
+        <div className={status === 'idle' ? 'hidden' : ''}>
+          <DisplaySharedFiles />
+        </div>
       </main>
     </>
   )

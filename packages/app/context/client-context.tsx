@@ -194,7 +194,10 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           const { meta, buffers } = incomingFiles[msg.id]
           console.log('buffers:', buffers)
           const blob = new Blob(buffers, { type: meta.mime })
-          const file = new File([blob], meta.name, { type: meta.mime })
+          const file = new File([blob], meta.name, {
+            type: meta.mime,
+            lastModified: new Date().valueOf(),
+          })
           setSharedFiles((currentFiles) => [...currentFiles, file])
           delete incomingFiles[msg.id]
         }

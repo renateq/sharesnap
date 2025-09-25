@@ -9,6 +9,7 @@ type FilePreviewProps = {
 const MAX_RATIO = 16 / 9
 
 export function FilePreview({ file }: FilePreviewProps) {
+  const [initialRotation] = useState(() => Math.random() * 20 - 10)
   const [previewUrl, setPreviewUrl] = useState<string>()
   const [dimensions, setDimensions] = useState<{
     width: number
@@ -41,7 +42,7 @@ export function FilePreview({ file }: FilePreviewProps) {
       <motion.div
         className="w-fit rounded-xl bg-white p-3"
         style={{
-          rotate: Math.random() * 20 - 10,
+          rotate: initialRotation,
         }}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -71,10 +72,4 @@ export function FilePreview({ file }: FilePreviewProps) {
       </motion.div>
     )
   }
-
-  return (
-    <div className="rounded border bg-gray-100 p-4">
-      <span>{file.name}</span>
-    </div>
-  )
 }
