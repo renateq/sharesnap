@@ -15,7 +15,6 @@ export const WithLocalImages = () => {
   useEffect(() => {
     async function loadFile() {
       const response = await fetch('/test-image.png')
-      console.log(response)
       const blob = await response.blob()
       const imageFile = new File([blob], 'test-image.png', { type: blob.type })
       setFile(imageFile)

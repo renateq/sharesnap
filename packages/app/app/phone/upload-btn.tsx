@@ -3,6 +3,7 @@
 import { useClientContext } from '@/context/client-context'
 import { ChangeEvent, useRef, useState } from 'react'
 import { ErrorModal } from './error-modal'
+import { motion } from 'motion/react'
 
 export function UploadBtn() {
   const { sendFiles, status } = useClientContext()
@@ -70,15 +71,16 @@ export function UploadBtn() {
 
   return (
     <>
-      <button
+      <motion.button
+        whileTap={{ scale: 0.95 }}
         onClick={() => {
           imageInputRef.current?.click()
         }}
         disabled={status !== 'connected'}
-        className="w-full rounded bg-black py-1.5 text-lg font-medium text-white disabled:opacity-50"
+        className="w-full rounded-lg bg-black py-1.5 text-lg font-medium text-white disabled:opacity-50"
       >
         Choose photos
-      </button>
+      </motion.button>
       <input
         type="file"
         ref={imageInputRef}

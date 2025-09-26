@@ -148,7 +148,7 @@ function CopyBtn({ file }: BtnProps) {
     <motion.button
       whileTap={{ scale: 0.9 }}
       onClick={handleCopy}
-      className="rounded-lg border border-gray-400 bg-gray-50 p-1"
+      className="rounded-lg border border-gray-400 bg-white p-1"
     >
       <Copy size={25} />
     </motion.button>
@@ -180,7 +180,7 @@ function DownloadBtn({ file }: BtnProps) {
     <motion.button
       whileTap={{ scale: 0.9 }}
       onClick={handleDownload}
-      className="rounded-lg border border-gray-400 bg-gray-50 p-1"
+      className="rounded-lg border border-gray-400 bg-white p-1"
     >
       <Download size={25} />
     </motion.button>

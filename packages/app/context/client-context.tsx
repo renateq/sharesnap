@@ -135,16 +135,6 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           username: '24392bad403b2067348389d4',
           credential: 'wpCEJTJxzGwgj2MH',
         },
-        {
-          urls: 'turn:global.relay.metered.ca:443',
-          username: '24392bad403b2067348389d4',
-          credential: 'wpCEJTJxzGwgj2MH',
-        },
-        {
-          urls: 'turns:global.relay.metered.ca:443?transport=tcp',
-          username: '24392bad403b2067348389d4',
-          credential: 'wpCEJTJxzGwgj2MH',
-        },
       ],
     })
 
@@ -200,15 +190,11 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
     {}
 
   function setupDataChannel(channel: RTCDataChannel) {
-    console.log('setting up data channel...')
-
     channel.onopen = () => {
       setStatus('connected')
-      console.log('Data channel open')
     }
 
     channel.onclose = () => {
-      console.log('Data channel closed')
       setStatus('disconnected')
     }
 
@@ -219,7 +205,6 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           incomingFiles[msg.id] = { meta: msg, buffers: [] }
         } else if (msg.type === 'file-end') {
           const { meta, buffers } = incomingFiles[msg.id]
-          console.log('buffers:', buffers)
           const blob = new Blob(buffers, { type: meta.mime })
           const file = new File([blob], meta.name, {
             type: meta.mime,

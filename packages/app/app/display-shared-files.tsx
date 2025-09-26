@@ -24,7 +24,7 @@ function DownloadAllBtn({ files }: DownloadAllBtnProps) {
     <motion.button
       onClick={() => downloadFilesAsZip(files)}
       whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
-      className="mb-5 ml-auto flex items-center gap-3 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm"
+      className="mb-5 ml-auto flex items-center gap-3 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-gray-50"
     >
       <Download size={18} />
       <span>Download all (.zip)</span>
