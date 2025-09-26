@@ -125,8 +125,10 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
-      dataChannelRef.current =
-        peerConnectionRef.current.createDataChannel('file')
+      dataChannelRef.current = peerConnectionRef.current.createDataChannel(
+        'file',
+        { ordered: true },
+      )
       setupDataChannel(dataChannelRef.current)
     }
 
@@ -182,7 +184,7 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
 
     channel.onclose = () => {
       console.log('Data channel closed')
-      setStatus('idle')
+      setStatus('disconnected')
     }
 
     channel.onmessage = (event) => {
@@ -217,11 +219,12 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
         dc.send(chunk)
         resolve()
       } else {
-        dc.bufferedAmountLowThreshold = 16 * 1024 * 10
-        dc.onbufferedamountlow = () => {
+        const handler = () => {
           dc.send(chunk)
+          dc.removeEventListener('bufferedamountlow', handler)
           resolve()
         }
+        dc.addEventListener('bufferedamountlow', handler)
       }
     })
   }
