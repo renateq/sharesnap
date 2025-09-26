@@ -63,7 +63,6 @@ export function FilePreview({ file }: FilePreviewProps) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
-        whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
       >
         <div
           className="relative h-64 overflow-hidden rounded-lg"
@@ -148,7 +147,6 @@ function CopyBtn({ file }: BtnProps) {
   return (
     <motion.button
       whileTap={{ scale: 0.9 }}
-      whileHover={{ scale: 1.1 }}
       onClick={handleCopy}
       className="rounded-lg border border-gray-400 bg-gray-50 p-1"
     >
@@ -173,7 +171,7 @@ function DownloadBtn({ file }: BtnProps) {
     const url = URL.createObjectURL(file)
     const a = document.createElement('a')
     a.href = url
-    a.download = `sharesnap-${currentId}`
+    a.download = `sharesnap_${currentId}`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -181,7 +179,6 @@ function DownloadBtn({ file }: BtnProps) {
   return (
     <motion.button
       whileTap={{ scale: 0.9 }}
-      whileHover={{ scale: 1.1 }}
       onClick={handleDownload}
       className="rounded-lg border border-gray-400 bg-gray-50 p-1"
     >
