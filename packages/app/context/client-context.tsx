@@ -24,15 +24,17 @@ type Message =
 type ClientContext = {
   status: Status
   socketId: string | null
+  sharedFiles: File[]
   connect: (peerId: string) => void
-  sendFile: () => void
+  sendFiles: (files: File[]) => void
 }
 
 const ClientContext = createContext<ClientContext>({
   status: 'idle',
   socketId: null,
+  sharedFiles: [],
   connect: () => {},
-  sendFile: () => {},
+  sendFiles: () => {},
 })
 
 export const useClientContext = () => useContext(ClientContext)
@@ -40,6 +42,7 @@ export const useClientContext = () => useContext(ClientContext)
 export function ClientContextProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>('idle')
   const [socketId, setSocketId] = useState<string | null>(null)
+  const [sharedFiles, setSharedFiles] = useState<File[]>([])
 
   const socketRef = useRef<WebSocket | null>(null)
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
@@ -122,8 +125,10 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
-      dataChannelRef.current =
-        peerConnectionRef.current.createDataChannel('file')
+      dataChannelRef.current = peerConnectionRef.current.createDataChannel(
+        'file',
+        { ordered: true },
+      )
       setupDataChannel(dataChannelRef.current)
     }
 
@@ -149,30 +154,110 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function* sliceFile(file: File, chunkSize = 16 * 1024) {
+    let offset = 0
+    while (offset < file.size) {
+      const slice = file.slice(offset, offset + chunkSize)
+      yield await slice.arrayBuffer()
+      offset += chunkSize
+    }
+  }
+
+  type FileMeta = {
+    type: 'file-meta' | 'file-end'
+    name: string
+    size: string
+    mime: string
+    id: string
+  }
+
+  const incomingFiles: Record<string, { meta: FileMeta; buffers: BlobPart[] }> =
+    {}
+
   function setupDataChannel(channel: RTCDataChannel) {
-    const receivedBuffers: Blob[] = []
+    console.log('setting up data channel...')
 
     channel.onopen = () => {
       setStatus('connected')
+      console.log('Data channel open')
     }
-    channel.onclose = () => console.log('Data channel closed')
+
+    channel.onclose = () => {
+      console.log('Data channel closed')
+      setStatus('disconnected')
+    }
 
     channel.onmessage = (event) => {
-      if (typeof event.data === 'string' && event.data === 'EOF') {
-        // All chunks received, assemble the file
-        console.log('File received!')
+      if (typeof event.data === 'string') {
+        const msg = JSON.parse(event.data)
+        if (msg.type === 'file-meta') {
+          incomingFiles[msg.id] = { meta: msg, buffers: [] }
+        } else if (msg.type === 'file-end') {
+          const { meta, buffers } = incomingFiles[msg.id]
+          console.log('buffers:', buffers)
+          const blob = new Blob(buffers, { type: meta.mime })
+          const file = new File([blob], meta.name, {
+            type: meta.mime,
+            lastModified: new Date().valueOf(),
+          })
+          setSharedFiles((currentFiles) => [...currentFiles, file])
+          delete incomingFiles[msg.id]
+        }
       } else {
-        receivedBuffers.push(event.data)
+        const arrayBuffer = event.data as ArrayBuffer
+        const activeId = Object.keys(incomingFiles)[0]
+        if (activeId) {
+          incomingFiles[activeId].buffers.push(arrayBuffer)
+        }
       }
     }
   }
 
-  function sendFile() {
-    dataChannelRef.current?.send('EOF')
+  async function sendChunk(dc: RTCDataChannel, chunk: ArrayBuffer) {
+    return new Promise<void>((resolve) => {
+      if (dc.bufferedAmount < 16 * 1024 * 10) {
+        dc.send(chunk)
+        resolve()
+      } else {
+        const handler = () => {
+          dc.send(chunk)
+          dc.removeEventListener('bufferedamountlow', handler)
+          resolve()
+        }
+        dc.addEventListener('bufferedamountlow', handler)
+      }
+    })
+  }
+
+  async function sendFiles(files: File[]) {
+    if (!dataChannelRef.current) return
+
+    for (const file of files) {
+      const fileId = crypto.randomUUID()
+
+      dataChannelRef.current.send(
+        JSON.stringify({
+          type: 'file-meta',
+          name: file.name,
+          size: file.size,
+          mime: file.type,
+          id: fileId,
+        }),
+      )
+
+      for await (const chunk of sliceFile(file)) {
+        if (chunk.byteLength > 0) await sendChunk(dataChannelRef.current, chunk)
+      }
+      dataChannelRef.current.send(
+        JSON.stringify({ type: 'file-end', id: fileId }),
+      )
+    }
   }
 
   return (
-    <ClientContext.Provider value={{ status, socketId, connect, sendFile }}>
+    <ClientContext.Provider
+      value={{ status, socketId, sharedFiles, connect, sendFiles }}
+    >
       {children}
     </ClientContext.Provider>
   )
