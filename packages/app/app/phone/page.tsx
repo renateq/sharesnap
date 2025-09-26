@@ -13,9 +13,7 @@ export default function Home() {
     if (socketId) {
       const params = new URLSearchParams(window.location.search)
       const id = params.get('id')
-      console.log(id)
       if (id) {
-        console.log('connect:', id)
         connect(id)
       }
     }
@@ -39,7 +37,7 @@ export default function Home() {
               width={400}
               height={400}
               alt="Person"
-              className="mx-auto w-11/12"
+              className="mx-auto w-10/12 max-w-lg"
             />
             <UploadBtn />
           </>
@@ -47,13 +45,4 @@ export default function Home() {
       </main>
     </>
   )
-}
-{
-  /* <div>
-  <p>Phone - {socketId}</p>
-  <p>Status: {status}</p>
-  <button className="bg-blue-200 hover:cursor-pointer" onClick={sendFile}>
-    Send File
-  </button>
-</div> */
 }

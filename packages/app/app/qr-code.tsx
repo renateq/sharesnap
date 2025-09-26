@@ -24,6 +24,7 @@ export function QRCode() {
         className="animate-jump-in flex h-[180px] w-[180px] items-center justify-center rounded-2xl bg-white shadow-2xl"
       >
         <QRCodeSVG
+          id="qr-code"
           value={`${window.location.origin}/phone?id=${socketId}`}
           onClick={handleClick}
           size={150}
