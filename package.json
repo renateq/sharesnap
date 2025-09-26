@@ -5,6 +5,7 @@
     "dev:server": "cd packages/server && go run main.go",
     "dev": "concurrently \"npm run dev:app\" \"npm run dev:server\"",
     "storybook": "cd packages/app && npm run storybook",
+    "install:all": "node scripts/install-all.js",
     "format": "cd packages/app && npx prettier . --write"
   },
   "devDependencies": {

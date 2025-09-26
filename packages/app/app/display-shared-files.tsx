@@ -9,16 +9,26 @@ export function DisplaySharedFiles() {
 
   return (
     <div className="mt-5 mb-20 xl:px-[10%]">
-      <motion.button
-        onClick={() => downloadFilesAsZip(sharedFiles)}
-        whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
-        className="mb-5 ml-auto flex items-center gap-3 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm"
-      >
-        <Download size={18} />
-        <span>Download all (.zip)</span>
-      </motion.button>
+      {sharedFiles.length > 0 && <DownloadAllBtn files={sharedFiles} />}
       <Gallery files={sharedFiles} />
     </div>
+  )
+}
+
+type DownloadAllBtnProps = {
+  files: File[]
+}
+
+function DownloadAllBtn({ files }: DownloadAllBtnProps) {
+  return (
+    <motion.button
+      onClick={() => downloadFilesAsZip(files)}
+      whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
+      className="mb-5 ml-auto flex items-center gap-3 rounded border border-gray-300 bg-white px-3 py-1.5 text-sm"
+    >
+      <Download size={18} />
+      <span>Download all (.zip)</span>
+    </motion.button>
   )
 }
 
