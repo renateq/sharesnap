@@ -7,7 +7,7 @@ type FilePreviewProps = {
   file: File
 }
 
-const MAX_RATIO = 4 / 3
+const MAX_RATIO = 5 / 4
 
 export function FilePreview({ file }: FilePreviewProps) {
   const [initialRotation] = useState(() => Math.random() * 14 - 7)
@@ -65,7 +65,7 @@ export function FilePreview({ file }: FilePreviewProps) {
         whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
       >
         <div
-          className="relative h-64 overflow-hidden rounded-lg"
+          className="relative h-72 overflow-hidden rounded-lg"
           style={{ aspectRatio: isTooWide ? MAX_RATIO : aspectRatio }}
         >
           <Image

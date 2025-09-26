@@ -15,15 +15,15 @@ export function UploadBtn() {
     '.jpeg',
     '.jpg',
     '.gif',
-    '.mp4',
-    '.mov',
     '.heic',
     '.webp',
     '.webp',
     '.heif',
-    '.avi',
-    '.webm',
     '.svg',
+    /* '.mp4',
+    '.mov',
+    '.avi',
+    '.webm', */
   ]
   const allowedTypes = [
     'image/png',
@@ -33,10 +33,10 @@ export function UploadBtn() {
     'image/webp',
     'image/heic',
     'image/heif',
-    'video/mp4',
+    /* 'video/mp4',
     'video/quicktime', // .mov
     'video/x-msvideo', // .avi
-    'video/webm',
+    'video/webm', */
   ]
 
   function handleInput(e: ChangeEvent<HTMLInputElement>) {
