@@ -58,14 +58,14 @@ export function FilePreview({ file }: FilePreviewProps) {
 
     return (
       <motion.div
-        className="w-fit overflow-hidden rounded-xl border border-gray-200 bg-white p-3"
+        className="w-fit overflow-hidden rounded-xl border border-gray-200 bg-white p-2"
         style={{ rotate: initialRotation }}
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
       >
         <div
-          className="relative h-72 overflow-hidden rounded-lg"
+          className="relative h-80 overflow-hidden rounded-lg"
           style={{ aspectRatio: isTooWide ? MAX_RATIO : aspectRatio }}
         >
           <Image
@@ -148,9 +148,9 @@ function CopyBtn({ file }: BtnProps) {
     <motion.button
       whileTap={{ scale: 0.9 }}
       onClick={handleCopy}
-      className="rounded-lg border border-gray-400 bg-white p-1"
+      className="cursor-pointer rounded-lg border border-gray-400 bg-white p-1"
     >
-      <Copy size={25} />
+      <Copy size={22} />
     </motion.button>
   )
 }
@@ -180,9 +180,9 @@ function DownloadBtn({ file }: BtnProps) {
     <motion.button
       whileTap={{ scale: 0.9 }}
       onClick={handleDownload}
-      className="rounded-lg border border-gray-400 bg-white p-1"
+      className="cursor-pointer rounded-lg border border-gray-400 bg-white p-1"
     >
-      <Download size={25} />
+      <Download size={22} />
     </motion.button>
   )
 }

@@ -77,7 +77,7 @@ export function UploadBtn() {
           imageInputRef.current?.click()
         }}
         disabled={status !== 'connected'}
-        className="w-full rounded-lg bg-black py-1.5 text-lg font-medium text-white disabled:opacity-50"
+        className="w-full rounded-lg bg-black py-2.5 text-lg font-medium text-white disabled:opacity-50"
       >
         Choose photos
       </motion.button>
