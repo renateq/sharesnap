@@ -1,15 +1,33 @@
 'use client'
 
 import { useClientContext } from '@/context/client-context'
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { ErrorModal } from './error-modal'
 import { motion } from 'motion/react'
-import { Images } from 'lucide-react'
+import { Check, Images } from 'lucide-react'
+
+enum State {
+  idle,
+  sending,
+  done,
+}
 
 export function UploadBtn() {
-  const { sendFiles, status } = useClientContext()
+  const { sendFiles, status, isSending } = useClientContext()
   const imageInputRef = useRef<HTMLInputElement | null>(null)
   const [rejectedFiles, setRejectedFiles] = useState<string[]>([])
+  const [state, setState] = useState<State>(State.idle)
+
+  useEffect(() => {
+    if (isSending) {
+      setState(State.sending)
+    } else if (state === State.sending) {
+      setState(State.done)
+      setTimeout(() => {
+        setState(State.idle)
+      }, 2000)
+    }
+  }, [isSending])
 
   const allowedTypesExtensions = [
     '.png',
@@ -77,11 +95,21 @@ export function UploadBtn() {
         onClick={() => {
           imageInputRef.current?.click()
         }}
-        disabled={status !== 'connected'}
-        className="flex w-full items-center justify-center gap-4 rounded-lg bg-black py-2.5 text-xl font-medium text-white disabled:opacity-50"
+        disabled={status !== 'connected' || state !== State.idle}
+        className="flex h-13 w-full items-center justify-center gap-4 rounded-lg bg-black text-xl font-medium text-white"
       >
-        <Images size={30} />
-        <span>Choose photos</span>
+        {state === State.idle && (
+          <>
+            <Images size={30} />
+            <span>Choose photos</span>
+          </>
+        )}
+        {state === State.sending && <Loader />}
+        {state === State.done && (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+            <Check size={40} />
+          </motion.div>
+        )}
       </motion.button>
       <input
         type="file"
@@ -97,5 +125,29 @@ export function UploadBtn() {
         close={() => setRejectedFiles([])}
       />
     </>
+  )
+}
+
+export default function Loader() {
+  const dots = [0, 1, 2]
+  const duration = 0.4
+
+  return (
+    <div className="flex gap-4">
+      {dots.map((dot, i) => (
+        <motion.div
+          key={i}
+          initial={{ scale: 0.5 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: duration,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            delay: (i * duration) / dots.length,
+          }}
+          className="h-6 w-6 rounded-full bg-white"
+        />
+      ))}
+    </div>
   )
 }

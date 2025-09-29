@@ -25,6 +25,7 @@ type ClientContext = {
   status: Status
   socketId: string | null
   sharedFiles: File[]
+  isSending: boolean
   connect: (peerId: string) => void
   sendFiles: (files: File[]) => void
 }
@@ -33,6 +34,7 @@ const ClientContext = createContext<ClientContext>({
   status: 'idle',
   socketId: null,
   sharedFiles: [],
+  isSending: false,
   connect: () => {},
   sendFiles: () => {},
 })
@@ -43,6 +45,7 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>('idle')
   const [socketId, setSocketId] = useState<string | null>(null)
   const [sharedFiles, setSharedFiles] = useState<File[]>([])
+  const [isSending, setIsSending] = useState(false)
 
   const socketRef = useRef<WebSocket | null>(null)
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
@@ -240,6 +243,7 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
   }
 
   async function sendFiles(files: File[]) {
+    setIsSending(true)
     if (!dataChannelRef.current) return
 
     for (const file of files) {
@@ -261,12 +265,13 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
       dataChannelRef.current.send(
         JSON.stringify({ type: 'file-end', id: fileId }),
       )
+      setIsSending(false)
     }
   }
 
   return (
     <ClientContext.Provider
-      value={{ status, socketId, sharedFiles, connect, sendFiles }}
+      value={{ status, socketId, sharedFiles, isSending, connect, sendFiles }}
     >
       {children}
     </ClientContext.Provider>
