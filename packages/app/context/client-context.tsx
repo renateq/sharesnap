@@ -1,5 +1,6 @@
 'use client'
 
+import { ShareStatusModal } from '@/app/phone/share-status-modal'
 import {
   createContext,
   ReactNode,
@@ -46,12 +47,16 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
   const [socketId, setSocketId] = useState<string | null>(null)
   const [sharedFiles, setSharedFiles] = useState<File[]>([])
   const [isSending, setIsSending] = useState(false)
+  const [showShareStatusModal, setShowStatusModal] = useState(false)
+  const [noOfFilesReceived, setNoOfFilesReceived] = useState(0)
 
   const socketRef = useRef<WebSocket | null>(null)
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
   const dataChannelRef = useRef<RTCDataChannel | null>(null)
   const peerIdRef = useRef<string | null>(null)
   const isInitiatorRef = useRef(false)
+  const noOfFilesToBeSentRef = useRef(0)
+  const noOfFilesReceivedRef = useRef(0)
 
   useEffect(() => {
     const socket = new WebSocket(
@@ -215,6 +220,15 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           })
           setSharedFiles((currentFiles) => [...currentFiles, file])
           delete incomingFiles[msg.id]
+          dataChannelRef.current?.send(
+            JSON.stringify({ type: 'file-received' }),
+          )
+        } else if (msg.type === 'file-received') {
+          noOfFilesReceivedRef.current++
+          setNoOfFilesReceived(noOfFilesReceivedRef.current)
+          if (noOfFilesToBeSentRef.current === noOfFilesReceivedRef.current) {
+            setIsSending(false)
+          }
         }
       } else {
         const arrayBuffer = event.data as ArrayBuffer
@@ -243,7 +257,14 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
   }
 
   async function sendFiles(files: File[]) {
+    if (isSending) return
+
     setIsSending(true)
+    noOfFilesToBeSentRef.current = files.length
+    noOfFilesReceivedRef.current = 0
+    setNoOfFilesReceived(0)
+    setShowStatusModal(true)
+
     if (!dataChannelRef.current) return
 
     for (const file of files) {
@@ -265,14 +286,27 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
       dataChannelRef.current.send(
         JSON.stringify({ type: 'file-end', id: fileId }),
       )
-      setIsSending(false)
     }
   }
+
+  useEffect(() => {
+    if (!isSending && showShareStatusModal) {
+      setTimeout(() => {
+        setShowStatusModal(false)
+      }, 1000)
+    }
+  }, [isSending])
 
   return (
     <ClientContext.Provider
       value={{ status, socketId, sharedFiles, isSending, connect, sendFiles }}
     >
+      <ShareStatusModal
+        isVisible={showShareStatusModal}
+        noOfSharedFiles={noOfFilesReceived}
+        totalFiles={noOfFilesToBeSentRef.current || 1}
+      />
+
       {children}
     </ClientContext.Provider>
   )
