@@ -4,6 +4,7 @@ import { useClientContext } from '@/context/client-context'
 import { ChangeEvent, useRef, useState } from 'react'
 import { ErrorModal } from './error-modal'
 import { motion } from 'motion/react'
+import { Images } from 'lucide-react'
 
 export function UploadBtn() {
   const { sendFiles, status } = useClientContext()
@@ -77,9 +78,10 @@ export function UploadBtn() {
           imageInputRef.current?.click()
         }}
         disabled={status !== 'connected'}
-        className="w-full rounded-lg bg-black py-2.5 text-lg font-medium text-white disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-4 rounded-lg bg-black py-2.5 text-xl font-medium text-white disabled:opacity-50"
       >
-        Choose photos
+        <Images size={30} />
+        <span>Choose photos</span>
       </motion.button>
       <input
         type="file"

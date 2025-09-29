@@ -80,7 +80,7 @@ export function FilePreview({ file }: FilePreviewProps) {
             </div>
           )}
         </div>
-        <div className="absolute top-0 left-0 h-full w-full bg-black/10 opacity-0 hover:opacity-100">
+        <div className="absolute top-0 left-0 h-full w-full bg-black/5 opacity-0 hover:opacity-100">
           <div className="absolute right-5 bottom-5 flex items-center gap-2">
             <DownloadBtn file={file} />
             {type !== 'video' && <CopyBtn file={file} />}

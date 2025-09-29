@@ -21,7 +21,7 @@ export function QRCode() {
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="animate-jump-in flex h-[180px] w-[180px] items-center justify-center rounded-2xl bg-white shadow-2xl"
+        className="flex h-[180px] w-[180px] items-center justify-center rounded-2xl bg-white shadow-2xl"
       >
         <QRCodeSVG
           id="qr-code"
