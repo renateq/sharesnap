@@ -3,8 +3,9 @@ import './globals.css'
 import { ClientContextProvider } from '@/context/client-context'
 
 export const metadata: Metadata = {
-  title: 'Sharesnap',
-  description: 'Quickly share pictures from phone to desktop',
+  title: 'Snapshift',
+  description:
+    'Snapshift lets you send photos from phone to laptop in seconds. Just scan a QR code, select pictures, and they appear instantly - no cables, no email.',
 }
 
 export default function RootLayout({
