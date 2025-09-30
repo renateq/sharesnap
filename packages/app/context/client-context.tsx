@@ -138,10 +138,15 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           username: '24392bad403b2067348389d4',
           credential: 'wpCEJTJxzGwgj2MH',
         },
-        {
+        /* {
           urls: 'turn:global.relay.metered.ca:80?transport=tcp',
           username: '24392bad403b2067348389d4',
           credential: 'wpCEJTJxzGwgj2MH',
+        }, */
+        {
+          urls: 'relay1.expressturn.com:3480',
+          username: '000000002074593679',
+          credential: 'f0tg/m+Uhua+/VrHlkKJsMecVQ8=',
         },
       ],
     })
