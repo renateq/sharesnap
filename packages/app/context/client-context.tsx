@@ -144,7 +144,10 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
           credential: 'wpCEJTJxzGwgj2MH',
         }, */
         {
-          urls: 'relay1.expressturn.com:3480',
+          urls: [
+            'turn:relay1.expressturn.com:3480?transport=udp',
+            'turn:relay1.expressturn.com:3480?transport=tcp',
+          ],
           username: '000000002074593679',
           credential: 'f0tg/m+Uhua+/VrHlkKJsMecVQ8=',
         },
