@@ -130,14 +130,14 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
     peerConnectionRef.current = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        {
+        /* {
           urls: 'stun:stun.relay.metered.ca:80',
         },
         {
           urls: 'turn:global.relay.metered.ca:80',
           username: '24392bad403b2067348389d4',
           credential: 'wpCEJTJxzGwgj2MH',
-        },
+        }, */
         /* {
           urls: 'turn:global.relay.metered.ca:80?transport=tcp',
           username: '24392bad403b2067348389d4',
@@ -145,8 +145,9 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
         }, */
         {
           urls: [
-            'turn:relay1.expressturn.com:3480?transport=udp',
-            'turn:relay1.expressturn.com:3480?transport=tcp',
+            'turn:relay1.expressturn.com:3478?transport=udp',
+            'turn:relay1.expressturn.com:3478?transport=tcp',
+            'turns:relay1.expressturn.com:5349?transport=tcp',
           ],
           username: '000000002074593679',
           credential: 'f0tg/m+Uhua+/VrHlkKJsMecVQ8=',
