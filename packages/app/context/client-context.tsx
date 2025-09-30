@@ -155,28 +155,36 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
       ],
     })
 
-    peerConnectionRef.current.getStats(null).then((stats) => {
-      stats.forEach((report) => {
-        console.log(stats)
-        console.log(report.type)
-        if (report.type === 'candidate-pair' && report.state === 'succeeded') {
-          const localCandidate = stats.get(report.localCandidateId)
-          const remoteCandidate = stats.get(report.remoteCandidateId)
+    peerConnectionRef.current.addEventListener(
+      'iceconnectionstatechange',
+      () => {
+        if (peerConnectionRef.current?.iceConnectionState === 'connected') {
+          peerConnectionRef.current.getStats(null).then((stats) => {
+            stats.forEach((report) => {
+              if (
+                report.type === 'candidate-pair' &&
+                report.state === 'succeeded'
+              ) {
+                const local = stats.get(report.localCandidateId)
+                const remote = stats.get(report.remoteCandidateId)
 
-          console.log('Local candidate type:', localCandidate.candidateType)
-          console.log('Remote candidate type:', remoteCandidate.candidateType)
+                console.log('Local candidate type:', local.candidateType)
+                console.log('Remote candidate type:', remote.candidateType)
 
-          if (
-            localCandidate.candidateType === 'relay' ||
-            remoteCandidate.candidateType === 'relay'
-          ) {
-            console.log('Connection is using TURN server')
-          } else {
-            console.log('Connection is direct P2P')
-          }
+                if (
+                  local.candidateType === 'relay' ||
+                  remote.candidateType === 'relay'
+                ) {
+                  console.log('Connection is using TURN server 🚦')
+                } else {
+                  console.log('Connection is direct P2P ✅')
+                }
+              }
+            })
+          })
         }
-      })
-    })
+      },
+    )
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
