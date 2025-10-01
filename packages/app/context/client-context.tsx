@@ -1,7 +1,6 @@
 'use client'
 
 import { ShareStatusModal } from '@/app/phone/share-status-modal'
-import { monitorConnection } from '@/lib/monitor-connection'
 import {
   createContext,
   ReactNode,
@@ -155,8 +154,6 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
         },
       ],
     })
-
-    monitorConnection(peerConnectionRef.current)
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
