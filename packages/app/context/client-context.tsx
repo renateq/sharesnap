@@ -1,6 +1,7 @@
 'use client'
 
 import { ShareStatusModal } from '@/app/phone/share-status-modal'
+import { monitorConnection } from '@/lib/monitor-connection'
 import {
   createContext,
   ReactNode,
@@ -155,36 +156,7 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
       ],
     })
 
-    peerConnectionRef.current.addEventListener(
-      'iceconnectionstatechange',
-      () => {
-        if (peerConnectionRef.current?.iceConnectionState === 'connected') {
-          peerConnectionRef.current.getStats(null).then((stats) => {
-            stats.forEach((report) => {
-              if (
-                report.type === 'candidate-pair' &&
-                report.state === 'succeeded'
-              ) {
-                const local = stats.get(report.localCandidateId)
-                const remote = stats.get(report.remoteCandidateId)
-
-                console.log('Local candidate type:', local.candidateType)
-                console.log('Remote candidate type:', remote.candidateType)
-
-                if (
-                  local.candidateType === 'relay' ||
-                  remote.candidateType === 'relay'
-                ) {
-                  console.log('Connection is using TURN server 🚦')
-                } else {
-                  console.log('Connection is direct P2P ✅')
-                }
-              }
-            })
-          })
-        }
-      },
-    )
+    monitorConnection(peerConnectionRef.current)
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
