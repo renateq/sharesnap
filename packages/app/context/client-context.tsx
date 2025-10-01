@@ -1,6 +1,7 @@
 'use client'
 
 import { ShareStatusModal } from '@/app/phone/share-status-modal'
+import { logRelayInfo } from '@/lib/log-relay-info'
 import {
   createContext,
   ReactNode,
@@ -154,6 +155,8 @@ export function ClientContextProvider({ children }: { children: ReactNode }) {
         },
       ],
     })
+
+    logRelayInfo(peerConnectionRef.current)
 
     // Only the initiator creates the channel
     if (isInitiatorRef.current && !dataChannelRef.current) {
